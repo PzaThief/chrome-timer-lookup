@@ -1,36 +1,32 @@
-// import { useState } from 'react'
-import './App.css'
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { useEffect, useState } from "react";
+import "./App.css";
+import { DEFAULT_UPDATE_INTERVAL, GET_TIMER_HISTORY_KEY } from "./config/const";
+import { Timer } from "./types/timer";
 
 function App() {
-  // const [count, setCount] = useState(0) 
-  
-  const changeColorOnClick = async () => {
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-    if (tab.url?.startsWith("chrome://")) return undefined;
+  const [schedule, setSchedule] = useState<Timer[]>();
 
-    chrome.scripting.executeScript({
-      target: { tabId: tab.id! },
-      func: () => {
-        document.body.style.backgroundColor = 'green';
-      }
-    });
-  }
+  useEffect(() => {
+    setInterval(async () => {
+      const [tab] = await chrome.tabs.query({active: true, currentWindow: true});
+      console.log(tab)
+      const response = await chrome.tabs.sendMessage(tab.id!, GET_TIMER_HISTORY_KEY);
+
+      setSchedule(response);
+    }, DEFAULT_UPDATE_INTERVAL);
+  }, []);
+
   return (
     <>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => changeColorOnClick()}>
-         Change Color
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <h1>Timer Schedule</h1>
+      <ul>
+        {schedule?.map((item, i) => (
+          <li key={i}>{item.id}</li>
+        ))}
+      </ul>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
