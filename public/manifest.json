@@ -1,0 +1,23 @@
+{
+    "manifest_version": 3,
+    "name": "Timer lookup extension",
+    "version": "1.0.0",
+    "description": "",
+    "action": {
+        "default_popup": "index.html"
+    },
+    "permissions": [
+        "scripting",
+        "tabs",
+        "activeTab"
+    ],
+    "host_permissions": [
+        "<all_urls>"
+    ],
+	"icons": {
+		"16": "timer.png",
+		"32": "timer.png",
+		"48": "timer.png",
+		"128": "timer.png"	
+	}
+}
