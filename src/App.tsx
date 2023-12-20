@@ -6,7 +6,7 @@ import { SimplifiedTimer } from "./types/timer";
 import { TimerHistoryWindow } from "./types/window";
 import { currentTab } from "./utils/chrome";
 import { TimerHistoryTable } from "./components/TimerHistory";
-import { isEmptyObject } from "./utils/misc";
+import { isNullOrEmpty } from "./utils/misc";
 
 function App() {
   const [schedule, setSchedule] = useState<SimplifiedTimer[]>([]);
@@ -34,7 +34,7 @@ function App() {
           if (resultWithFrames.length != 1) return;
           const result = resultWithFrames[0].result;
           console.log(result);
-          if (isEmptyObject(result)) return;
+          if (isNullOrEmpty(result)) return;
           setSchedule(result);
         });
     }, DEFAULT_UPDATE_INTERVAL);
