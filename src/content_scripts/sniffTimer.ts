@@ -3,7 +3,7 @@ import { TimerHistoryWindow } from "../types/window";
 
 declare const window: TimerHistoryWindow;
 
-const timerHistory: Timer[] = [];
+const timerHistory: Map<number, Timer> = new Map();
 
 const originals = {
   setTimeout: window.setTimeout.bind(window),
@@ -13,44 +13,28 @@ const originals = {
 };
 
 window.setTimeout = function (func, delay) {
-  let lastExecuted: Date | undefined = undefined;
   const id = originals.setTimeout(() => {
     (func as () => unknown)();
-    lastExecuted = new Date();
+    timerHistory.get(id)!.lastExecuted = new Date();
   }, delay);
   const currentTime = new Date();
-  const timer = new Timer(
-    id,
-    TimerType.Timeout,
-    func,
-    delay,
-    currentTime,
-    lastExecuted
-  );
-  timerHistory.push(timer);
+  const timer = new Timer(id, TimerType.Timeout, func, delay, currentTime);
+  timerHistory.set(id, timer);
 
   return id;
 };
 
 window.setInterval = function (func, delay) {
-  let lastExecuted: Date | undefined = undefined;
   const id = originals.setInterval(() => {
     (func as () => unknown)();
-    lastExecuted = new Date();
+    timerHistory.get(id)!.lastExecuted = new Date();
   }, delay);
 
   const currentTime = new Date();
-  const timer = new Timer(
-    id,
-    TimerType.Interval,
-    func,
-    delay,
-    currentTime,
-    lastExecuted
-  );
-  timerHistory.push(timer);
+  const timer = new Timer(id, TimerType.Interval, func, delay, currentTime);
+  timerHistory.set(id, timer);
 
   return id;
 };
 
-window.TimerHistory = timerHistory
+window.TimerHistory = timerHistory;

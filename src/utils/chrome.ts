@@ -3,12 +3,7 @@ export async function readLocalStorage(key: string): Promise<unknown> {
   return obj[key];
 }
 
-export async function currentHost(): Promise<string> {
-  const [tab] = await chrome.tabs.query({active: true, currentWindow: true});
-  const url = new URL(tab.url!);
-  return url.hostname;
-}
-
+// can not use in content script due to access chrome.tabs
 export async function currentTab(): Promise<chrome.tabs.Tab> {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   return tab;
@@ -20,4 +15,5 @@ export function injectScript(script: string) {
   s.type = "module";
   s.src = chrome.runtime.getURL(script);
   document.head.prepend(s);
+  s.remove();
 }

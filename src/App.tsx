@@ -2,30 +2,40 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import { DEFAULT_UPDATE_INTERVAL } from "./config/const";
-import { Timer } from "./types/timer";
+import { SimplifiedTimer } from "./types/timer";
 import { TimerHistoryWindow } from "./types/window";
+import { currentTab } from "./utils/chrome";
+import { TimerHistoryTable } from "./components/TimerHistory";
+import { isEmptyObject } from "./utils/misc";
 
 function App() {
-  const [schedule, setSchedule] = useState<Timer[]>();
+  const [schedule, setSchedule] = useState<SimplifiedTimer[]>([]);
   useEffect(() => {
     setInterval(async () => {
-      const [tab] = await chrome.tabs.query({
-        active: true,
-        currentWindow: true,
-      });
+      const tab = await currentTab();
       if (!tab) return;
 
       chrome.scripting
         .executeScript({
           target: { tabId: tab.id! },
           func: () => {
-            return (window as Window as TimerHistoryWindow).TimerHistory;
+            const simplifiedTimers: SimplifiedTimer[] = [];
+            for (const [_, value] of (
+              window as Window as TimerHistoryWindow
+            ).TimerHistory.entries()) {
+              simplifiedTimers.push(value.simplify());
+            }
+
+            return simplifiedTimers;
           },
-          world: "MAIN"
+          world: "MAIN",
         })
-        .then(resultWithFrames => {
+        .then((resultWithFrames) => {
           if (resultWithFrames.length != 1) return;
-          setSchedule(resultWithFrames[0].result);
+          const result = resultWithFrames[0].result;
+          console.log(result);
+          if (isEmptyObject(result)) return;
+          setSchedule(result);
         });
     }, DEFAULT_UPDATE_INTERVAL);
   }, []);
@@ -33,11 +43,7 @@ function App() {
   return (
     <>
       <h1>Timer Schedule</h1>
-      <ul>
-        {schedule?.map((item, i) => (
-          <li key={i}>{item.id}</li>
-        ))}
-      </ul>
+      <TimerHistoryTable timerHistory={schedule} />
     </>
   );
 }

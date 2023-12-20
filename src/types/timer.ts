@@ -21,6 +21,28 @@ export class Timer {
     this.createdAt = createdAt;
     this.lastExecuted = lastExecuted;
   }
+
+  simplify(): SimplifiedTimer {
+    return new SimplifiedTimer(this);
+  }
+}
+
+export class SimplifiedTimer {
+  readonly id: number;
+  readonly type: string;
+  readonly func: string;
+  readonly delay: number | undefined;
+  readonly createdAt: string;
+  lastExecuted: string | undefined;
+
+  constructor(timer: Timer) {
+    this.id = timer.id;
+    this.type = TimerType[timer.type];
+    this.func = timer.func.toString();
+    this.delay = timer.delay;
+    this.createdAt = timer.createdAt.toJSON();
+    this.lastExecuted = timer.lastExecuted?.toJSON();
+  }
 }
 
 export enum TimerType {
