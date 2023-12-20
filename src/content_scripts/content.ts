@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-nocheck
 import { GET_GLOBAL_ACTIVATE_KEY } from "../config/const";
 import { injectScript, readLocalStorage } from "../utils/chrome";
 import sniffTimer from "./sniffTimer?script&module";
