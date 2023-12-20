@@ -21,10 +21,21 @@ export const manifest: ManifestV3Export = {
   permissions: ["scripting", "tabs", "activeTab", "storage"],
   content_scripts: [
     {
-      js: ["content_scripts/sniffTimer.ts"],
+      js: ["content_scripts/content.ts"],
       matches: ["<all_urls>"],
       run_at: "document_start"
     },
+  ],
+  web_accessible_resources: [
+    {
+      matches: [
+        "<all_urls>"
+      ],
+      resources: [
+        "assets/*.js",
+      ],
+      "use_dynamic_url": true
+    }
   ],
   host_permissions: ["<all_urls>"],
 };

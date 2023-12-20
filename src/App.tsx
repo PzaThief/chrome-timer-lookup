@@ -1,19 +1,32 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from "react";
 import "./App.css";
-import { DEFAULT_UPDATE_INTERVAL, GET_TIMER_HISTORY_KEY } from "./config/const";
+import { DEFAULT_UPDATE_INTERVAL } from "./config/const";
 import { Timer } from "./types/timer";
+import { TimerHistoryWindow } from "./types/window";
 
 function App() {
   const [schedule, setSchedule] = useState<Timer[]>();
-
   useEffect(() => {
     setInterval(async () => {
-      const [tab] = await chrome.tabs.query({active: true, currentWindow: true});
-      console.log(tab)
-      const response = await chrome.tabs.sendMessage(tab.id!, GET_TIMER_HISTORY_KEY);
+      const [tab] = await chrome.tabs.query({
+        active: true,
+        currentWindow: true,
+      });
+      if (!tab) return;
 
-      setSchedule(response);
+      chrome.scripting
+        .executeScript({
+          target: { tabId: tab.id! },
+          func: () => {
+            return (window as Window as TimerHistoryWindow).TimerHistory;
+          },
+          world: "MAIN"
+        })
+        .then(resultWithFrames => {
+          if (resultWithFrames.length != 1) return;
+          setSchedule(resultWithFrames[0].result);
+        });
     }, DEFAULT_UPDATE_INTERVAL);
   }, []);
 
