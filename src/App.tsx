@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from "react";
 import "./App.css";
 import { DEFAULT_UPDATE_INTERVAL } from "./config/const";
@@ -19,10 +18,13 @@ function App() {
         .executeScript({
           target: { tabId: tab.id! },
           func: () => {
-            const simplifiedTimers: SimplifiedTimer[] = [];
-            for (const [_, value] of (
+            const timerHistory = (
               window as Window as TimerHistoryWindow
-            ).TimerHistory.entries()) {
+            ).TimerHistory
+            if (timerHistory == null) return [];
+
+            const simplifiedTimers: SimplifiedTimer[] = [];
+            for (const [_, value] of timerHistory.entries()) {
               simplifiedTimers.push(value.simplify());
             }
 

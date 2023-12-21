@@ -1,7 +1,10 @@
+import { timeConversion } from "../utils/misc";
+
 export class Timer {
   readonly id: number;
   readonly type: TimerType;
   readonly func: TimerHandler;
+  readonly callStack: string | undefined;
   readonly delay: number | undefined;
   readonly createdAt: Date;
   lastExecuted: Date | undefined;
@@ -10,6 +13,7 @@ export class Timer {
     id: number,
     type: TimerType,
     func: TimerHandler,
+    callStack: string | undefined = undefined,
     delay: number | undefined = undefined,
     createdAt: Date,
     lastExecuted: Date | undefined = undefined
@@ -17,6 +21,7 @@ export class Timer {
     this.id = id;
     this.type = type;
     this.func = func;
+    this.callStack = callStack;
     this.delay = delay;
     this.createdAt = createdAt;
     this.lastExecuted = lastExecuted;
@@ -31,7 +36,8 @@ export class SimplifiedTimer {
   readonly id: number;
   readonly type: string;
   readonly func: string;
-  readonly delay: number | undefined;
+  readonly callStack: string | undefined;
+  readonly delay: string | undefined;
   readonly createdAt: string;
   lastExecuted: string | undefined;
 
@@ -39,7 +45,8 @@ export class SimplifiedTimer {
     this.id = timer.id;
     this.type = TimerType[timer.type];
     this.func = timer.func.toString();
-    this.delay = timer.delay;
+    this.callStack = timer.callStack;
+    this.delay = timer.delay ? timeConversion(timer.delay) : undefined;
     this.createdAt = timer.createdAt.toJSON();
     this.lastExecuted = timer.lastExecuted?.toJSON();
   }

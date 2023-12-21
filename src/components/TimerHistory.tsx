@@ -15,6 +15,9 @@ const columns = [
   columnHelper.accessor("func", {
     header: "func",
   }),
+  columnHelper.accessor("callStack", {
+    header: "callStack",
+  }),
   columnHelper.accessor("delay", { header: "delay" }),
   columnHelper.accessor("createdAt", {
     header: "createdAt",
