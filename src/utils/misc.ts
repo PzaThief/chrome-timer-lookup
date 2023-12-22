@@ -19,9 +19,16 @@ export function timeConversion(duration: number) {
     duration = duration - (minutes * msInMinute);
   }
 
-  const seconds = Math.trunc(duration / 1000);
+  const msInSecond = 1000;
+  const seconds = Math.trunc(duration / msInSecond);
   if (seconds > 0) {
     portions.push(seconds + 's');
+    duration = duration - (seconds * msInSecond);
+  }
+
+  const milliSeconds = duration;
+  if (milliSeconds > 0 || portions.length == 0) {
+    portions.push(milliSeconds + 'ms');
   }
 
   return portions.join(' ');

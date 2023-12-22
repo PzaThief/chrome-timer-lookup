@@ -46,7 +46,7 @@ export class SimplifiedTimer {
     this.type = TimerType[timer.type];
     this.func = timer.func.toString();
     this.callStack = timer.callStack;
-    this.delay = timer.delay ? timeConversion(timer.delay) : undefined;
+    this.delay = timeConversion(timer.delay ?? 0);
     this.createdAt = timer.createdAt.toJSON();
     this.lastExecuted = timer.lastExecuted?.toJSON();
   }
