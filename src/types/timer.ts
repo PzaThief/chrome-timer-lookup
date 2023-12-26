@@ -1,5 +1,3 @@
-import { timeConversion } from "../utils/misc";
-
 export class Timer {
   readonly id: number;
   readonly type: TimerType;
@@ -27,28 +25,89 @@ export class Timer {
     this.lastExecuted = lastExecuted;
   }
 
-  simplify(): SimplifiedTimer {
-    return new SimplifiedTimer(this);
+  toTransferable(): TransferableTimer {
+    return TransferableTimer.fromTimer(this)
+  }
+  // Return remaining time to next execution in ms.
+  // If there is no more execution in the future, it will return -1
+  remainingToNextExecution(): number {
+    if ((this.delay ?? 0) === 0) return -1;
+
+    if (this.type === TimerType.Interval) {
+      const previous = this.lastExecuted ?? this.createdAt;
+      const next = new Date(previous.getTime() + this.delay!);
+      return next.getTime() - new Date().getTime();
+    }
+
+    // in case of Timeout
+    if (this.lastExecuted != null) return -1;
+    const next = new Date(this.createdAt.getTime() + this.delay!);
+    return next.getTime() - new Date().getTime();
   }
 }
 
-export class SimplifiedTimer {
+export class TransferableTimer {
   readonly id: number;
-  readonly type: string;
+  readonly type: TimerType;
   readonly func: string;
   readonly callStack: string | undefined;
-  readonly delay: string | undefined;
+  readonly delay: number | undefined;
   readonly createdAt: string;
   lastExecuted: string | undefined;
 
-  constructor(timer: Timer) {
-    this.id = timer.id;
-    this.type = TimerType[timer.type];
-    this.func = timer.func.toString();
-    this.callStack = timer.callStack;
-    this.delay = timeConversion(timer.delay ?? 0);
-    this.createdAt = timer.createdAt.toJSON();
-    this.lastExecuted = timer.lastExecuted?.toJSON();
+  constructor(
+    id: number,
+    type: TimerType,
+    func: string,
+    callStack: string | undefined = undefined,
+    delay: number | undefined = undefined,
+    createdAt: string,
+    lastExecuted: string | undefined = undefined
+  ) {
+    this.id = id;
+    this.type = type;
+    this.func = func;
+    this.callStack = callStack;
+    this.delay = delay;
+    this.createdAt = createdAt;
+    this.lastExecuted = lastExecuted;
+  }
+
+  public static fromTimer(timer: Timer) {
+    return new TransferableTimer(
+      timer.id,
+      timer.type,
+      timer.func.toString(),
+      timer.callStack,
+      timer.delay,
+      timer.createdAt.toJSON(),
+      timer.lastExecuted?.toJSON()
+    );
+  }
+
+  public static fromObject(obj: object): TransferableTimer {
+    const timer = obj as TransferableTimer
+    return new TransferableTimer(
+      timer.id,
+      timer.type,
+      timer.func,
+      timer.callStack,
+      timer.delay,
+      timer.createdAt,
+      timer.lastExecuted
+    );
+  }
+
+  toTimer(): Timer {
+    return new Timer(
+      this.id,
+      this.type,
+      this.func,
+      this.callStack,
+      this.delay,
+      new Date(this.createdAt),
+      this.lastExecuted ? new Date(this.lastExecuted) : undefined
+    );
   }
 }
 

@@ -5,13 +5,15 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import "./TimeHistory.css";
-import { SimplifiedTimer } from "../types/timer";
+import { Timer, TimerType } from "../types/timer";
+import { timeToReadable } from "../utils/misc";
 
-const columnHelper = createColumnHelper<SimplifiedTimer>();
+const columnHelper = createColumnHelper<Timer>();
 const columns = [
   columnHelper.accessor("id", { header: "id" }),
   columnHelper.accessor("type", {
     header: "type",
+    cell: ({ renderValue }) => TimerType[renderValue()!],
   }),
   columnHelper.accessor("func", {
     header: "func",
@@ -19,19 +21,23 @@ const columns = [
   columnHelper.accessor("callStack", {
     header: "callStack",
   }),
-  columnHelper.accessor("delay", { header: "delay" }),
+  columnHelper.accessor("delay", { header: "delay",
+  cell: ({ renderValue }) => timeToReadable(renderValue() ?? 0),
+}),
   columnHelper.accessor("createdAt", {
     header: "createdAt",
+    cell: ({ renderValue }) => renderValue()?.toJSON(),
   }),
   columnHelper.accessor("lastExecuted", {
     header: "lastExecuted",
+    cell: ({ renderValue }) => renderValue()?.toJSON(),
   }),
 ];
 
 export function TimerHistoryTable({
   timerHistory,
 }: {
-  timerHistory: SimplifiedTimer[];
+  timerHistory: Timer[];
 }) {
   const table = useReactTable({
     columns: columns,

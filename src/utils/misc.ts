@@ -2,7 +2,7 @@ export function isNullOrEmpty(obj: object): boolean {
   return obj == null || Object.keys(obj).length === 0 && obj.constructor === Object;
 }
 
-export function timeConversion(duration: number) {
+export function timeToReadable(duration: number) {
   const portions: string[] = [];
 
   const msInHour = 1000 * 60 * 60;
