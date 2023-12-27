@@ -28,12 +28,15 @@ async function updateSchedule(
 
         return transferableTimers;
       },
+      // set world MAIN to get tab's timerHistory
       world: "MAIN",
     })
     .then((resultWithFrames) => {
       if (resultWithFrames.length != 1) return;
       const result = resultWithFrames[0].result;
       if (isNullOrEmpty(result)) return;
+      // Result from Main world will be not just object not expected class instance.
+      // So use the object to create an instance and use the new instance.
       const timers = result.map((timer) =>
         TransferableTimer.fromObject(timer).toTimer()
       );
