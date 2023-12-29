@@ -1,3 +1,3 @@
 export const GET_GLOBAL_ACTIVATE_KEY = "GLOBAL_ACTIVATE"
 export const DEFAULT_UPDATE_INTERVAL = 1000 // 1s
-export const GET_TIMER_HISTORY_KEY = "getTimers"
+export const DEBUG_MODE = false

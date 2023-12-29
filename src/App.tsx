@@ -5,7 +5,7 @@ import { Timer, TransferableTimer } from "./types/timer";
 import { TimerHistoryWindow } from "./types/window";
 import { currentTab } from "./utils/chrome";
 import { TimerHistoryTable } from "./components/TimerHistory";
-import { isNullOrEmpty } from "./utils/misc";
+import { isNullOrEmpty, log } from "./utils/misc";
 
 async function updateSchedule(
   setSchedule: (value: React.SetStateAction<Timer[]>) => void
@@ -40,7 +40,7 @@ async function updateSchedule(
       const timers = result.map((timer) =>
         TransferableTimer.fromObject(timer).toTimer()
       );
-      console.log(timers);
+      log(timers);
       setSchedule(timers);
     });
 }
