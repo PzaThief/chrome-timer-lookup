@@ -37,5 +37,4 @@ export const manifest: ManifestV3Export = {
       "use_dynamic_url": true
     }
   ],
-  host_permissions: ["<all_urls>"],
 };
