@@ -19,7 +19,9 @@ inspired by [setInterval-sniffer](https://github.com/NV/setInterval-sniffer)
 
    - You should enable Developer mode by toggling
 
-1. lookup timers in extension popup or devtools
+1. lookup timers in extension popup or devtools(coming soon)
+   - popup screenshot
+   ![screenshot](screenshot.png)
 
 ## How it works
 
