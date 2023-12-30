@@ -6,6 +6,7 @@ export class Timer {
   readonly delay: number | undefined;
   readonly createdAt: Date;
   lastExecuted: Date | undefined;
+  status: TimerStatus | undefined;
 
   constructor(
     id: number,
@@ -14,7 +15,8 @@ export class Timer {
     callStack: string | undefined = undefined,
     delay: number | undefined = undefined,
     createdAt: Date,
-    lastExecuted: Date | undefined = undefined
+    lastExecuted: Date | undefined = undefined,
+    status: TimerStatus | undefined = undefined
   ) {
     this.id = id;
     this.type = type;
@@ -23,10 +25,11 @@ export class Timer {
     this.delay = delay;
     this.createdAt = createdAt;
     this.lastExecuted = lastExecuted;
+    this.status = status;
   }
 
   toTransferable(): TransferableTimer {
-    return TransferableTimer.fromTimer(this)
+    return TransferableTimer.fromTimer(this);
   }
   // Return remaining time to next execution in ms.
   // If there is no more execution in the future, it will return -1
@@ -54,6 +57,7 @@ export class TransferableTimer {
   readonly delay: number | undefined;
   readonly createdAt: string;
   lastExecuted: string | undefined;
+  status: TimerStatus | undefined;
 
   constructor(
     id: number,
@@ -62,7 +66,8 @@ export class TransferableTimer {
     callStack: string | undefined = undefined,
     delay: number | undefined = undefined,
     createdAt: string,
-    lastExecuted: string | undefined = undefined
+    lastExecuted: string | undefined = undefined,
+    status: TimerStatus | undefined = undefined
   ) {
     this.id = id;
     this.type = type;
@@ -71,6 +76,7 @@ export class TransferableTimer {
     this.delay = delay;
     this.createdAt = createdAt;
     this.lastExecuted = lastExecuted;
+    this.status = status;
   }
 
   public static fromTimer(timer: Timer) {
@@ -81,12 +87,13 @@ export class TransferableTimer {
       timer.callStack,
       timer.delay,
       timer.createdAt.toJSON(),
-      timer.lastExecuted?.toJSON()
+      timer.lastExecuted?.toJSON(),
+      timer.status
     );
   }
 
   public static fromObject(obj: object): TransferableTimer {
-    const timer = obj as TransferableTimer
+    const timer = obj as TransferableTimer;
     return new TransferableTimer(
       timer.id,
       timer.type,
@@ -94,7 +101,8 @@ export class TransferableTimer {
       timer.callStack,
       timer.delay,
       timer.createdAt,
-      timer.lastExecuted
+      timer.lastExecuted,
+      timer.status
     );
   }
 
@@ -106,7 +114,8 @@ export class TransferableTimer {
       this.callStack,
       this.delay,
       new Date(this.createdAt),
-      this.lastExecuted ? new Date(this.lastExecuted) : undefined
+      this.lastExecuted ? new Date(this.lastExecuted) : undefined,
+      this.status
     );
   }
 }
@@ -114,4 +123,10 @@ export class TransferableTimer {
 export enum TimerType {
   Interval = 1,
   Timeout,
+}
+
+export enum TimerStatus {
+  Running = 1,
+  Done,
+  Canceled,
 }

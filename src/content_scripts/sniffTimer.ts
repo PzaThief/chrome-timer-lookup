@@ -1,4 +1,4 @@
-import { Timer, TimerType } from "../types/timer";
+import { Timer, TimerType, TimerStatus } from "../types/timer";
 import { TimerHistoryWindow } from "../types/window";
 import { getCallStack } from "../utils/misc";
 
@@ -17,10 +17,20 @@ window.setTimeout = function (func, delay) {
   const id = originals.setTimeout(() => {
     (func as () => unknown)();
     timerHistory.get(id)!.lastExecuted = new Date();
+    timerHistory.get(id)!.status = TimerStatus.Done;
   }, delay);
   const currentTime = new Date();
-  const callStack = getCallStack(1)
-  const timer = new Timer(id, TimerType.Timeout, func, callStack, delay, currentTime);
+  const callStack = getCallStack(1);
+  const timer = new Timer(
+    id,
+    TimerType.Timeout,
+    func,
+    callStack,
+    delay,
+    currentTime,
+    undefined,
+    TimerStatus.Running
+  );
   timerHistory.set(id, timer);
 
   return id;
@@ -33,8 +43,17 @@ window.setInterval = function (func, delay) {
   }, delay);
 
   const currentTime = new Date();
-  const callStack = getCallStack(1)
-  const timer = new Timer(id, TimerType.Interval, func, callStack, delay, currentTime);
+  const callStack = getCallStack(1);
+  const timer = new Timer(
+    id,
+    TimerType.Interval,
+    func,
+    callStack,
+    delay,
+    currentTime,
+    undefined,
+    TimerStatus.Running
+  );
   timerHistory.set(id, timer);
 
   return id;
