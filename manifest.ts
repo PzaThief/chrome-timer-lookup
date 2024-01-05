@@ -2,7 +2,7 @@ import { type ManifestV3Export } from "@crxjs/vite-plugin";
 
 export const manifest: ManifestV3Export = {
   manifest_version: 3,
-  name: "Timer lookup extension",
+  name: "Timer lookup",
   description: "Timer lookup extension for developer",
   version: "1.0.0",
   action: {
