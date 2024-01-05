@@ -18,7 +18,7 @@ export const manifest: ManifestV3Export = {
     service_worker: "background/service-worker.ts",
     type: "module",
   },
-  permissions: ["scripting", "tabs", "activeTab", "storage"],
+  permissions: ["scripting", "activeTab", "storage"],
   content_scripts: [
     {
       js: ["content_scripts/content.ts"],
