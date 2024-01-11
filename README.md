@@ -7,7 +7,7 @@ inspired by [setInterval-sniffer](https://github.com/NV/setInterval-sniffer)
 
 1. Install
 
-   A. Install from [Chrome Web Store]() (recommended)
+   A. Install from [Chrome Web Store](https://chromewebstore.google.com/detail/nhgoijfonjagfjmnleagelbmjhpccnle) (recommended)
 
    B. build and install manually
 
